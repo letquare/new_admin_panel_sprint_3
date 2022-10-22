@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:14.4
+    command:
+      - 'postgres'
+      - '-c'
+      - 'search_path=public,content'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - '5432:5432'
+    depends_on:
+      - elastic
+    networks:
+      - backend
+  service:
+    build: .
+    links:
+      - 'db'
+    volumes:
+      - static:/opt/app/static
+    restart: always
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+      - elastic
+    networks:
+      - backend
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - elacticsearch-data:/usr/share/elacticsearch/data
+    ports:
+      - '9200:9200'
+    networks:
+      - backend
+  redis:
+    image: redis:6-alpine
+    restart: always
+    volumes:
+      - redis-data:/data
+    ports:
+      - '6379:6379'
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+  static:
+  elacticsearch-data:
+  redis-data:
+
+networks:
+  backend:
+     driver: bridge
