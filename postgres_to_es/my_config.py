@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic import BaseSettings, BaseConfig
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,13 +15,13 @@ class PostgresDsl(BaseSettings):
         env_prefix = 'my_prefix_'
         fields = {
             'dbname': {
-                'env': 'db_name'
+                'env': 'postgres_db'
             },
             'user': {
-                'env': 'db_user'
+                'env': 'postgres_user'
             },
             'password': {
-                'env': 'db_password'
+                'env': 'postgres_password'
             },
             'host': {
                 'env': 'db_host'
@@ -43,7 +43,7 @@ class ElacticConfig(BaseSettings):
                 'env': 'elastic_host'
             },
             'port': {
-                'env': 'elastic_post'
+                'env': 'elastic_port'
             }
         }
 
@@ -59,7 +59,7 @@ class RedisConfig(BaseSettings):
                 'env': 'redis_host'
             },
             'port': {
-                'env': 'redis_post'
+                'env': 'redis_port'
             }
         }
 
@@ -68,5 +68,3 @@ ELASTICSEARCH = ElacticConfig()
 REDISCON = RedisConfig()
 POSTGRES = PostgresDsl()
 SLEEP_TIME = 10
-
-print(ElacticConfig().dict())
