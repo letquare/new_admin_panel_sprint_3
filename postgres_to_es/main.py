@@ -20,7 +20,7 @@ logger = logging.getLogger('my_log_lord')
 def etl():
     """Оснавная функция которая запускает весь процесс"""
     while True:
-        logger.info('Проверка изменений в бд и последующая загрузка в ES')
+        logger.info('Checking changes in the database and then uploading to ES')
         save_data = redis_state.retrieve_state(movies.__name__,
                                                default=str(datetime.min))
         data_extract = postgres_extract.extract(name_table=movies,
@@ -31,7 +31,7 @@ def etl():
                                  structure=MoviesStructure
                                  )
 
-        logger.info('Теперь немного посплю и дальше пойду проверять')
+        logger.info("Now I'll get some sleep and then I'll go check it out.")
         time.sleep(SLEEP_TIME)
 
 

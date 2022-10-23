@@ -7,25 +7,21 @@ services:
       - 'search_path=public,content'
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-    ports:
-      - '5432:5432'
+    env_file:
+      - ./postgres.env
+    expose:
+      - 5432
     depends_on:
       - elastic
     networks:
       - backend
-  service:
+  etl:
     build: .
     links:
       - 'db'
-    volumes:
-      - static:/opt/app/static
     restart: always
-    ports:
-      - '8000:8000'
+    env_file:
+      - ./.env
     depends_on:
       - db
       - elastic
@@ -37,8 +33,8 @@ services:
       - discovery.type=single-node
     volumes:
       - elacticsearch-data:/usr/share/elacticsearch/data
-    ports:
-      - '9200:9200'
+    expose:
+      - 9200
     networks:
       - backend
   redis:
@@ -46,14 +42,13 @@ services:
     restart: always
     volumes:
       - redis-data:/data
-    ports:
-      - '6379:6379'
+    expose:
+      - 6739
     networks:
       - backend
 
 volumes:
   postgres_data:
-  static:
   elacticsearch-data:
   redis-data:
 

@@ -2,7 +2,7 @@ from my_config import ElacticConfig
 from condition import RedisStorage
 from backoff import backoff
 
-from typing import Generator, Optional
+from typing import Generator, Optional, Callable
 from elasticsearch import Elasticsearch, helpers
 
 
@@ -29,7 +29,7 @@ class ElacticLoad:
         """Подключение к ES"""
         return Elasticsearch(hosts=[f'{self.config.host}:{self.config.port}'])
 
-    def _transform_data(self, raw_data, structure, name_index) -> Generator:
+    def _transform_data(self, raw_data: Generator, structure: Callable, name_index: str) -> Generator:
         """Создание итератора и сохранение состояния"""
 
         for row in raw_data:
@@ -42,7 +42,7 @@ class ElacticLoad:
 
             yield data_dict
 
-    def load_data(self, name_index: str, data: Generator, structure):
+    def load_data(self, name_index: str, data: Generator, structure: Callable):
         """Загрузка данных в ES"""
         docs = self._transform_data(data, structure, name_index)
         helpers.bulk(

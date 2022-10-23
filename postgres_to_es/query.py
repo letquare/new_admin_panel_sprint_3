@@ -1,5 +1,3 @@
-
-
 def movies(load_from):
     return f"""
     SELECT film.id,

@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger('my_log_lord')
 
 
-def backoff(start_sleep_time=0.1, factor=2, border_sleep_time=100):
+def backoff(start_sleep_time: float = 0.1, factor: int = 2, border_sleep_time: int = 100):
     """
     Функция для повторного выполнения функции через некоторое время,
     если возникла ошибка. Использует наивный экспоненциальный рост времени
@@ -34,13 +34,11 @@ def backoff(start_sleep_time=0.1, factor=2, border_sleep_time=100):
                     if start > border_sleep_time:
                         start = float(border_sleep_time)
                     logger.exception(exc)
-                    logger.warning('WOW! У нас тут падения,'
-                                   'благо на подушки! Сейчас поднимем!')
-                    logger.warning(f'Попробуем еще раз через {start}c.')
+                    logger.warning('WOW! we have a fail!')
+                    logger.warning("Lets try again with %d", start)
                     sleep(start)
             else:
-                logger.error('Очень жаль, но не получилось :/')
-                logger.error('Зовите программиста, все упало :/')
+                logger.error("Too bad it didn't work out. :/")
 
         return inner
 

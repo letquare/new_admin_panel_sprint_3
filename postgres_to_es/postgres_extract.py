@@ -1,7 +1,9 @@
+import datetime
+
 import psycopg2
 from psycopg2.extensions import connection
 from psycopg2.extras import RealDictCursor
-from typing import Generator
+from typing import Generator, Callable
 
 from my_config import PostgresDsl
 from backoff import backoff
@@ -24,7 +26,7 @@ class PostgresExtration:
         return psycopg2.connect(**self.config.dict(),
                                 cursor_factory=RealDictCursor)
 
-    def extract(self, name_table, _from) -> Generator:
+    def extract(self, name_table: Callable, _from: datetime.datetime) -> Generator:
         """Получение данных из Postgres"""
         with self.connect.cursor() as cursor:
             cursor.execute(name_table(_from))
